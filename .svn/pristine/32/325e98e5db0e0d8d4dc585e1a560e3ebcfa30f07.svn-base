@@ -1,0 +1,81 @@
+package cn.edu.qut.controller;
+
+import java.util.List;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import base.BaseController;
+import cn.edu.qut.entity.Attribute;
+import cn.edu.qut.service.AttributeService;
+@RequestMapping("goods")
+@Controller
+public class AttributeController implements BaseController<Attribute>{
+	@Autowired
+	AttributeService attributeService;
+
+	@RequiresPermissions("goods:attributeadd")
+	@RequestMapping("attributeadd")
+	public String add(Attribute t, Model model) {
+		System.out.println("添加传过来的参数是："+t.toString());
+		// TODO Auto-generated method stub
+		boolean flag = attributeService.add(t);
+		model.addAttribute("flag", flag);
+		return "redirect:attributelist?goods_id="+t.getGoods_id();
+	}
+
+	@RequiresPermissions("goods:attributedelete")
+	@RequestMapping("attributedelete")
+	public String delete(Attribute t, Model model) {
+		// TODO Auto-generated method stub
+		//System.out.println("前台传过来的供应商信息是"+t.toString());
+		boolean flag = attributeService.delete(t);
+		model.addAttribute("flag", flag);
+		return "redirect:attributelist?goods_id="+t.getGoods_id();
+	}
+	
+	@RequiresPermissions("goods:attributeupdate")
+	@RequestMapping("attributeupdate")
+	public String update(Attribute t, Model model) {
+		// TODO Auto-generated method stub
+		System.out.println("前台传过来的供应商信息是"+t.toString());
+		boolean flag = attributeService.update(t);
+		model.addAttribute("flag", flag);
+		return "redirect:attributelist?goods_id="+t.getGoods_id();
+	}
+
+	@RequiresPermissions("goods:attributequery")
+	@RequestMapping("attributequery")
+	public String query(Attribute t, Model model) {
+		// TODO Auto-generated method stub
+		System.out.println("query的goods_id="+t.getGoods_id());
+		Attribute attribute = attributeService.query(t);
+		model.addAttribute("attribute", attribute);
+		
+		return "attributeForm";
+	}
+
+	@RequiresPermissions("goods:attributelist")
+	@RequestMapping("attributelist")
+	public String list(Attribute t,Model model) {
+		// TODO Auto-generated method stub
+		List<Attribute> list= attributeService.list(t);
+		//System.out.println("供应商列表是"+list);
+		model.addAttribute("list", list);
+		model.addAttribute("goods_id", t.getGoods_id());
+		return "attributeList";
+	}
+
+	@RequiresPermissions("goods:attributeopen")
+	@RequestMapping("attributeopen")
+	String open(Model model,String goods_id){
+		System.out.println("open里goods_id"+goods_id);
+		model.addAttribute("goods_id", goods_id);
+		return "attributeForm";
+	}
+	
+	
+}

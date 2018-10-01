@@ -1,0 +1,68 @@
+package cn.edu.qut.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
+import cn.edu.qut.entity.Order;
+import cn.edu.qut.entity.OrderGoods;
+import cn.edu.qut.entity.Seller;
+import cn.edu.qut.service.OrderService;
+
+
+@RequestMapping("order")
+@Controller
+
+public class OrderController {
+	@Autowired
+	OrderService orderService;
+	
+	
+	
+	//模拟网购物车添加商品的情景
+	@RequiresPermissions("order:addOrderGoods")
+	@RequestMapping("addOrderGoods")
+	String addOrderGoods(OrderGoods orderGoods,Model model){
+		
+		System.out.println("订单子表"+orderGoods.toString());
+		//添加用户id
+		Seller user = (Seller)SecurityUtils.getSubject().getPrincipal();
+		String user_name = user.getSeller_login_name();
+		orderGoods.setCustomer(user_name);
+		
+		System.out.println("add store_id="+orderGoods.getStore_id());
+		model.addAttribute("store_id", orderGoods.getStore_id());
+		
+		boolean flag = orderService.addOrderGoods(orderGoods,model);
+		model.addAttribute("flag", flag);
+		return "redirect:shoppingCart";
+	}
+	
+	//查询购物车中所有的商品，订单子表list
+	@RequestMapping("shoppingCart")
+	@RequiresPermissions("order:shoppingCart")
+	String shoppingCart(String store_id,Model model){
+		model.addAttribute("store_id", store_id);
+		//获取user_id
+		Seller user = (Seller)SecurityUtils.getSubject().getPrincipal();
+		String user_name = user.getSeller_login_name();
+		List<OrderGoods> orderGoodsList = orderService.shoppingCart(user_name);
+		
+		model.addAttribute("orderGoodsList", orderGoodsList);
+		
+	
+		return "shoppingCart";
+	}
+	
+	
+}

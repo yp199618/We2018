@@ -1,0 +1,9 @@
+package cn.edu.qut.dao;
+
+
+import base.BaseDao;
+import cn.edu.qut.entity.Attribute;
+
+public interface AttributeDao extends BaseDao<Attribute>{
+	
+}

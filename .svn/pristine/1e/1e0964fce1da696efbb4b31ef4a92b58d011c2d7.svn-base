@@ -1,0 +1,75 @@
+package cn.edu.qut.controller;
+
+import java.util.List;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import base.BaseController;
+import cn.edu.qut.entity.Goods;
+import cn.edu.qut.service.GoodsService;
+@RequestMapping("goods")
+@Controller
+public class GoodsController implements BaseController<Goods>{
+	@Autowired
+	GoodsService goodsService;
+
+	@RequiresPermissions("goods:add")
+	@RequestMapping("add")
+	public String add(Goods t, Model model) {
+		// TODO Auto-generated method stub
+		boolean flag = goodsService.add(t);
+		model.addAttribute("flag", flag);
+		return "redirect:list";
+	}
+
+	@RequiresPermissions("goods:delete")
+	@RequestMapping("delete")
+	public String delete(Goods t, Model model) {
+		// TODO Auto-generated method stub
+		//System.out.println("前台传过来的供应商信息是"+t.toString());
+		boolean flag = goodsService.delete(t);
+		model.addAttribute("flag", flag);
+		return "redirect:list";
+	}
+	
+	@RequiresPermissions("goods:update")
+	@RequestMapping("update")
+	public String update(Goods t, Model model) {
+		// TODO Auto-generated method stub
+		System.out.println("前台传过来的供应商信息是"+t.toString());
+		boolean flag = goodsService.update(t);
+		model.addAttribute("flag", flag);
+		return "redirect:list";
+	}
+
+	@RequiresPermissions("goods:query")
+	@RequestMapping("query")
+	public String query(Goods t, Model model) {
+		// TODO Auto-generated method stub
+		Goods goods = goodsService.query(t);
+		model.addAttribute("goods", goods);
+		return "goodsForm";
+	}
+
+	@RequiresPermissions("goods:list")
+	@RequestMapping("list")
+	public String list(Goods t,Model model) {
+		// TODO Auto-generated method stub
+		List<Goods> list= goodsService.list(t);
+		//System.out.println("供应商列表是"+list);
+		model.addAttribute("list", list);
+		return "goodsList";
+	}
+
+	@RequiresPermissions("goods:open")
+	@RequestMapping("open")
+	String open(){
+		return "goodsForm";
+	}
+	
+	
+}

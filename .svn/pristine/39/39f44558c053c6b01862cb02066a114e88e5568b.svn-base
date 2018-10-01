@@ -1,0 +1,9 @@
+package cn.edu.qut.dao;
+
+import base.BaseDao;
+import cn.edu.qut.entity.Goods;
+
+public interface GoodsDao extends BaseDao<Goods>{
+	
+	
+}

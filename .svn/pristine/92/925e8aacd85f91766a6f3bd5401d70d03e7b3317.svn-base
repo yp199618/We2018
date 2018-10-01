@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.SortDao">
+    <!-- 增 -->
+   <insert id="add" parameterType="Sort">
+   		insert into sort 
+   			(sort_name,sort_grade,sort_parent,sort_show,store_id)
+   		values (#{sort_name},#{sort_grade},#{sort_parent},#{sort_show},#{store_id})
+   </insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Sort">
+		delete from sort where sort_id=#{sort_id}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="Sort">
+		update sort
+		set sort_name=#{sort_name},
+			sort_grade=#{sort_grade},
+			sort_parent=#{sort_parent},
+			sort_show=#{sort_show}
+		where sort_id=#{sort_id}
+	</update>
+	
+	<!-- 查找 -->
+	<select id="query" parameterType="Sort" resultType="Sort">
+		select * from sort where sort_id=#{sort_id}
+		<if test="sort_grade!=null and sort_grade!=''">
+			and sort_grade=#{and sort_grade}
+		</if>
+		 
+	</select>
+	
+	<select id="list" parameterType="Sort" resultType="Sort">
+		select * from sort where store_id=#{store_id}
+		<if test="sort_grade!=null and sort_grade!=''">
+			and sort_grade=#{sort_grade}
+		</if>
+		<if test="sort_parent!=null and sort_parent!=''">
+			and sort_parent=#{sort_parent}
+		</if>
+		
+	</select>
+	
+	
+	<!-- 以下是二级菜单 -->
+	
+    
+</mapper>
